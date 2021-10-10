@@ -1,7 +1,7 @@
 {
   "name": "response-iterator",
   "description": "Creates an async iterator for a variety of inputs in the browser and node. Supports fetch, node-fetch, and cross-fetch",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": {
     "email": "kmalakoff@gmail.com",
     "name": "Kevin Malakoff",
