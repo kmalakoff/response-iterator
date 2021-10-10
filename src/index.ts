@@ -4,39 +4,34 @@ interface CrossFetchResponse {
   _bodyBlob: Blob;
 }
 
-export interface IterableIterator<T> {
-  next(): Promise<IteratorResult<T, boolean>>;
-  [Symbol.asyncIterator](): Promise<IteratorResult<T, boolean>>;
-}
-
-function streamIterator<T>(stream): IterableIterator<T> {
+function streamIterator<T>(stream): AsyncIterableIterator<T> {
   const iterator = stream[Symbol.asyncIterator]();
   return {
-    next: function (): Promise<IteratorResult<T, boolean>> {
+    next(): Promise<IteratorResult<T, boolean>> {
       return iterator.next();
     },
-    [Symbol.asyncIterator]: function (): Promise<IteratorResult<T, boolean>> {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
       return this;
     },
-  } as IterableIterator<T>;
+  } as AsyncIterableIterator<T>;
 }
 
 /* c8 ignore start */
-function readerIterator<T>(reader): IterableIterator<T> {
+function readerIterator<T>(reader): AsyncIterableIterator<T> {
   return {
-    next: function (): Promise<IteratorResult<T, boolean>> {
+    next(): Promise<IteratorResult<T, boolean>> {
       return reader.read();
     },
-    [Symbol.asyncIterator]: function (): Promise<IteratorResult<T, boolean>> {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
       return this;
     },
-  } as IterableIterator<T>;
+  } as AsyncIterableIterator<T>;
 }
 
-function promiseIterator<T>(promise): IterableIterator<T> {
+function promiseIterator<T>(promise): AsyncIterableIterator<T> {
   let resolved = false;
   return {
-    next: function (): Promise<IteratorResult<T, boolean>> {
+    next(): Promise<IteratorResult<T, boolean>> {
       if (resolved) return Promise.resolve({ value: undefined, done: true });
       resolved = true;
       return new Promise(function (resolve, reject) {
@@ -47,10 +42,10 @@ function promiseIterator<T>(promise): IterableIterator<T> {
           .catch(reject);
       });
     },
-    [Symbol.asyncIterator]: function (): Promise<IteratorResult<T, boolean>> {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
       return this;
     },
-  } as IterableIterator<T>;
+  } as AsyncIterableIterator<T>;
 }
 /* c8 ignore stop */
 
@@ -59,7 +54,7 @@ function promiseIterator<T>(promise): IterableIterator<T> {
  */
 export default function responseIterator<T>(
   response: Response | NodeResponse | CrossFetchResponse
-): IterableIterator<T> {
+): AsyncIterableIterator<T> {
   if (response === undefined) throw new Error("Missing response for responseIterator");
 
   // node-fetch

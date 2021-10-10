@@ -1,12 +1,14 @@
 function streamIterator(stream) {
   const iterator = stream[Symbol.asyncIterator]();
   return {
-    next: function () {
+    next() {
       return iterator.next();
     },
-    [Symbol.asyncIterator]: function () {
+
+    [Symbol.asyncIterator]() {
       return this;
     }
+
   };
 }
 /* c8 ignore start */
@@ -14,19 +16,21 @@ function streamIterator(stream) {
 
 function readerIterator(reader) {
   return {
-    next: function () {
+    next() {
       return reader.read();
     },
-    [Symbol.asyncIterator]: function () {
+
+    [Symbol.asyncIterator]() {
       return this;
     }
+
   };
 }
 
 function promiseIterator(promise) {
   let resolved = false;
   return {
-    next: function () {
+    next() {
       if (resolved) return Promise.resolve({
         value: undefined,
         done: true
@@ -41,9 +45,11 @@ function promiseIterator(promise) {
         }).catch(reject);
       });
     },
-    [Symbol.asyncIterator]: function () {
+
+    [Symbol.asyncIterator]() {
       return this;
     }
+
   };
 }
 /* c8 ignore stop */
