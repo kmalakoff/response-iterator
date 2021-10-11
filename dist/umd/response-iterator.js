@@ -66,19 +66,22 @@
   }
   /* c8 ignore stop */
 
+
   /**
    * @param response A response. Supports fetch, node-fetch, and cross-fetch
    */
-
-
   function responseIterator(response) {
-    if (response === undefined) throw new Error("Missing response for responseIterator"); // node-fetch
+    if (response === undefined) throw new Error("Missing response for responseIterator"); // node node-fetch
 
     if (response.body && response.body[Symbol.asyncIterator] !== undefined) return streamIterator(response.body);
     /* c8 ignore start */
-    // browser fetch
-    else if (response.body && response.body.getReader) return readerIterator(response.body.getReader()); // browser cross-fetch
-    else if (response._bodyBlob) return promiseIterator(response._bodyBlob.arrayBuffer());
+    // browser fetch or undici
+    else if (response.body && response.body.getReader) return readerIterator(response.body.getReader()); // cross platform axios
+    else if (response.data) {
+      if (response.data.stream) return readerIterator(response.data.stream().getReader());else if (response.data[Symbol.asyncIterator] !== undefined) return streamIterator(response.data);
+    } // browser cross-fetch
+    else if (response._bodyBlob) return promiseIterator(response._bodyBlob.arrayBuffer()); // node got
+    else if (response.readable && response[Symbol.asyncIterator] !== undefined) return streamIterator(response);
     /* c8 ignore stop */
 
     throw new Error("Unknown body type for responseIterator");
