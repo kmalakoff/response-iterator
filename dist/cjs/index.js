@@ -62,25 +62,33 @@ function promiseIterator(promise) {
 }
 /* c8 ignore stop */
 
-
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
  */
-function responseIterator(response) {
-  if (response === undefined) throw new Error("Missing response for responseIterator"); // node node-fetch
 
-  if (response.body && response.body[Symbol.asyncIterator] !== undefined) return streamIterator(response.body);
+
+function responseIterator(response) {
+  if (response === undefined) throw new Error("Missing response for responseIterator"); // determine the body
+
+  var body = response;
+  if (response.body) body = response.body; // node-fetch, browser fetch, undici
+  else if (response.data) body = response.data; // axios
+
   /* c8 ignore start */
-  // browser fetch or undici
-  else if (response.body && response.body.getReader) return readerIterator(response.body.getReader()); // cross platform axios
-  else if (response.data) {
-    if (response.data.stream) return readerIterator(response.data.stream().getReader());else if (response.data[Symbol.asyncIterator] !== undefined) return streamIterator(response.data);
-  } // browser cross-fetch
-  else if (response._bodyBlob) return promiseIterator(response._bodyBlob.arrayBuffer()); // node got
-  else if (response.readable && response[Symbol.asyncIterator] !== undefined) return streamIterator(response);
+  else if (response._bodyBlob) body = response._bodyBlob; // cross-fetch
+
+  /* c8 ignore stop */
+  // adapt the body
+
+  if (body[Symbol.asyncIterator]) return streamIterator(body);
+  /* c8 ignore start */
+
+  if (body.getReader) return readerIterator(body.getReader());
+  if (body.stream) return readerIterator(body.stream().getReader());
+  if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
   /* c8 ignore stop */
 
-  throw new Error("Unknown body type for responseIterator");
+  throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
 }
 
 module.exports = responseIterator;

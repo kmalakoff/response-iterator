@@ -15,7 +15,7 @@ describe("response-iterator", function () {
     assert.throw(() => responseIterator(response as unknown as Response));
   });
 
-  it("fetch", async function () {
+  it("fetch or node-fetch", async function () {
     const res = await fetch("https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json");
 
     let data = "";
@@ -35,7 +35,7 @@ describe("response-iterator", function () {
     assert.deepEqual(JSON.parse(data).name, "response-iterator");
   });
 
-  it("axios stream", async function () {
+  it("axios stream or blob", async function () {
     const res = await axios({
       url: "https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json",
       responseType: typeof window === "undefined" ? "stream" : "blob",

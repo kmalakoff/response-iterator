@@ -1,8 +1,5 @@
 import { AxiosResponse } from "axios";
-import { Response as GotResponse } from "got";
 import { Response as NodeResponse } from "node-fetch";
-import { Readable as NodeReadableStream } from "stream";
-import { Response as UndiciResponse } from "undici";
 
 interface CrossFetchResponse {
   _bodyBlob: Blob;
@@ -53,39 +50,30 @@ function promiseIterator<T>(promise): AsyncIterableIterator<T> {
 }
 /* c8 ignore stop */
 
-export type ResponseType = AxiosResponse | CrossFetchResponse | GotResponse | NodeResponse | Response | UndiciResponse;
-
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
  */
-export default function responseIterator<T>(response: ResponseType): AsyncIterableIterator<T> {
+export default function responseIterator<T>(response: unknown): AsyncIterableIterator<T> {
   if (response === undefined) throw new Error("Missing response for responseIterator");
 
-  // node node-fetch
-  if ((response as NodeResponse).body && (response as NodeResponse).body[Symbol.asyncIterator] !== undefined)
-    return streamIterator<T>((response as NodeResponse).body);
-  /* c8 ignore start */
-  // browser fetch or undici
-  else if ((response as Response).body && (response as Response).body.getReader)
-    return readerIterator<T>((response as Response).body.getReader());
-  // cross platform axios
-  else if ((response as AxiosResponse).data) {
-    if ((response as AxiosResponse<Blob>).data.stream)
-      return readerIterator<T>(
-        ((response as AxiosResponse<Blob>).data.stream() as unknown as ReadableStream<Uint8Array>).getReader()
-      );
-    else if ((response as AxiosResponse<NodeReadableStream>).data[Symbol.asyncIterator] !== undefined)
-      return streamIterator<T>((response as AxiosResponse<NodeReadableStream>).data);
-  }
-
-  // browser cross-fetch
-  else if ((response as CrossFetchResponse)._bodyBlob)
-    return promiseIterator<T>((response as CrossFetchResponse)._bodyBlob.arrayBuffer());
-  // node got
-  else if ((response as GotResponse).readable && (response as GotResponse)[Symbol.asyncIterator] !== undefined)
-    return streamIterator<T>(response as GotResponse);
-
+  // determine the body
+  let body: unknown = response;
+  if ((response as NodeResponse).body) body = (response as NodeResponse).body;
+  // node-fetch, browser fetch, undici
+  else if ((response as AxiosResponse).data) body = (response as AxiosResponse).data;
+  // axios
+  /* c8 ignore start */ else if ((response as CrossFetchResponse)._bodyBlob)
+    body = (response as CrossFetchResponse)._bodyBlob; // cross-fetch
   /* c8 ignore stop */
 
-  throw new Error("Unknown body type for responseIterator");
+  // adapt the body
+  if (body[Symbol.asyncIterator]) return streamIterator<T>(body as AsyncIterableIterator<T>);
+  /* c8 ignore start */
+  if ((body as ReadableStream<T>).getReader) return readerIterator<T>((body as ReadableStream<T>).getReader());
+  if ((body as Blob).stream)
+    return readerIterator<T>(((body as Blob).stream() as unknown as ReadableStream<T>).getReader());
+  if ((body as Blob).arrayBuffer) return promiseIterator<T>((body as Blob).arrayBuffer());
+  /* c8 ignore stop */
+
+  throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
 }
