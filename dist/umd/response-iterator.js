@@ -19,8 +19,8 @@
     return obj;
   }
 
-  function streamIterator(stream) {
-    var iterator = stream[Symbol.asyncIterator]();
+  function asyncIterator(source) {
+    var iterator = source[Symbol.asyncIterator]();
     return _defineProperty({
       next: function next() {
         return iterator.next();
@@ -29,22 +29,99 @@
       return this;
     });
   }
+
+  var hasIterator$3 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
   /* c8 ignore start */
 
+  function nodeStreamIterator(stream) {
+    var _cleanup = null;
+    var error = null;
+    var done = false;
+    var data = [];
+    var waiting = [];
 
-  function readerIterator(reader) {
-    return _defineProperty({
+    function onData(chunk) {
+      if (error) return;
+      if (waiting.length) return waiting.shift()[0]({
+        value: chunk,
+        done: false
+      });
+      data.push(chunk);
+    }
+
+    function onError(err) {
+      error = err;
+      var all = waiting.slice();
+      all.forEach(function (pair) {
+        pair[1](err);
+      });
+      !_cleanup || _cleanup();
+    }
+
+    function onEnd() {
+      done = true;
+      var all = waiting.slice();
+      all.forEach(function (pair) {
+        pair[0]({
+          value: undefined,
+          done: true
+        });
+      });
+      !_cleanup || _cleanup();
+    }
+
+    _cleanup = function cleanup() {
+      _cleanup = null;
+      stream.removeListener("data", onData);
+      stream.removeListener("error", onError);
+      stream.removeListener("end", onEnd);
+      stream.removeListener("finish", onEnd);
+      stream.removeListener("close", onEnd);
+    };
+
+    stream.on("data", onData);
+    stream.on("error", onError);
+    stream.on("end", onEnd);
+    stream.on("finish", onEnd);
+    stream.on("close", onEnd);
+
+    function getNext() {
+      return new Promise(function (resolve, reject) {
+        if (error) return reject(error);
+        if (data.length) return resolve({
+          value: data.shift(),
+          done: false
+        });
+        if (done) return resolve({
+          value: undefined,
+          done: true
+        });
+        waiting.push([resolve, reject]);
+      });
+    }
+
+    var iterator = {
       next: function next() {
-        return reader.read();
+        return getNext();
       }
-    }, Symbol.asyncIterator, function () {
-      return this;
-    });
+    };
+
+    if (hasIterator$3) {
+      iterator[Symbol.asyncIterator] = function () {
+        return this;
+      };
+    }
+
+    return iterator;
   }
+  /* c8 ignore stop */
+
+  var hasIterator$2 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  /* c8 ignore start */
 
   function promiseIterator(promise) {
     var resolved = false;
-    return _defineProperty({
+    var iterator = {
       next: function next() {
         if (resolved) return Promise.resolve({
           value: undefined,
@@ -60,16 +137,42 @@
           })["catch"](reject);
         });
       }
-    }, Symbol.asyncIterator, function () {
-      return this;
-    });
+    };
+
+    if (hasIterator$2) {
+      iterator[Symbol.asyncIterator] = function () {
+        return this;
+      };
+    }
+
+    return iterator;
   }
   /* c8 ignore stop */
 
+  var hasIterator$1 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  /* c8 ignore start */
+
+  function readerIterator(reader) {
+    var iterator = {
+      next: function next() {
+        return reader.read();
+      }
+    };
+
+    if (hasIterator$1) {
+      iterator[Symbol.asyncIterator] = function () {
+        return this;
+      };
+    }
+
+    return iterator;
+  }
+  /* c8 ignore stop */
+
+  var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
   /**
    * @param response A response. Supports fetch, node-fetch, and cross-fetch
    */
-
 
   function responseIterator(response) {
     if (response === undefined) throw new Error("Missing response for responseIterator"); // determine the body
@@ -84,12 +187,13 @@
     /* c8 ignore stop */
     // adapt the body
 
-    if (body[Symbol.asyncIterator]) return streamIterator(body);
+    if (hasIterator && body[Symbol.asyncIterator]) return asyncIterator(body);
     /* c8 ignore start */
 
     if (body.getReader) return readerIterator(body.getReader());
     if (body.stream) return readerIterator(body.stream().getReader());
     if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
+    if (body.pipe) return nodeStreamIterator(body);
     /* c8 ignore stop */
 
     throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");

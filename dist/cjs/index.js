@@ -1,71 +1,24 @@
-'use strict';
+"use strict";
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = responseIterator;
 
-  return obj;
-}
+var _async = _interopRequireDefault(require("./iterators/async"));
 
-function streamIterator(stream) {
-  var iterator = stream[Symbol.asyncIterator]();
-  return _defineProperty({
-    next: function next() {
-      return iterator.next();
-    }
-  }, Symbol.asyncIterator, function () {
-    return this;
-  });
-}
-/* c8 ignore start */
+var _nodeStream = _interopRequireDefault(require("./iterators/nodeStream"));
 
+var _promise = _interopRequireDefault(require("./iterators/promise"));
 
-function readerIterator(reader) {
-  return _defineProperty({
-    next: function next() {
-      return reader.read();
-    }
-  }, Symbol.asyncIterator, function () {
-    return this;
-  });
-}
+var _reader = _interopRequireDefault(require("./iterators/reader"));
 
-function promiseIterator(promise) {
-  var resolved = false;
-  return _defineProperty({
-    next: function next() {
-      if (resolved) return Promise.resolve({
-        value: undefined,
-        done: true
-      });
-      resolved = true;
-      return new Promise(function (resolve, reject) {
-        promise.then(function (value) {
-          resolve({
-            value: value,
-            done: false
-          });
-        })["catch"](reject);
-      });
-    }
-  }, Symbol.asyncIterator, function () {
-    return this;
-  });
-}
-/* c8 ignore stop */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
  */
-
 
 function responseIterator(response) {
   if (response === undefined) throw new Error("Missing response for responseIterator"); // determine the body
@@ -80,16 +33,17 @@ function responseIterator(response) {
   /* c8 ignore stop */
   // adapt the body
 
-  if (body[Symbol.asyncIterator]) return streamIterator(body);
+  if (hasIterator && body[Symbol.asyncIterator]) return (0, _async["default"])(body);
   /* c8 ignore start */
 
-  if (body.getReader) return readerIterator(body.getReader());
-  if (body.stream) return readerIterator(body.stream().getReader());
-  if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
+  if (body.getReader) return (0, _reader["default"])(body.getReader());
+  if (body.stream) return (0, _reader["default"])(body.stream().getReader());
+  if (body.arrayBuffer) return (0, _promise["default"])(body.arrayBuffer());
+  if (body.pipe) return (0, _nodeStream["default"])(body);
   /* c8 ignore stop */
 
   throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
 }
 
-module.exports = responseIterator;
+module.exports = exports.default;
 //# sourceMappingURL=index.js.map

@@ -1,65 +1,13 @@
-function streamIterator(stream) {
-  const iterator = stream[Symbol.asyncIterator]();
-  return {
-    next() {
-      return iterator.next();
-    },
-
-    [Symbol.asyncIterator]() {
-      return this;
-    }
-
-  };
-}
-/* c8 ignore start */
-
-
-function readerIterator(reader) {
-  return {
-    next() {
-      return reader.read();
-    },
-
-    [Symbol.asyncIterator]() {
-      return this;
-    }
-
-  };
-}
-
-function promiseIterator(promise) {
-  let resolved = false;
-  return {
-    next() {
-      if (resolved) return Promise.resolve({
-        value: undefined,
-        done: true
-      });
-      resolved = true;
-      return new Promise(function (resolve, reject) {
-        promise.then(function (value) {
-          resolve({
-            value,
-            done: false
-          });
-        }).catch(reject);
-      });
-    },
-
-    [Symbol.asyncIterator]() {
-      return this;
-    }
-
-  };
-}
-/* c8 ignore stop */
-
+import asyncIterator from "./iterators/async.js";
+import nodeStreamIterator from "./iterators/nodeStream.js";
+import promiseIterator from "./iterators/promise.js";
+import readerIterator from "./iterators/reader.js";
+const hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
  */
 
-
-function responseIterator(response) {
+export default function responseIterator(response) {
   if (response === undefined) throw new Error("Missing response for responseIterator"); // determine the body
 
   let body = response;
@@ -72,16 +20,15 @@ function responseIterator(response) {
   /* c8 ignore stop */
   // adapt the body
 
-  if (body[Symbol.asyncIterator]) return streamIterator(body);
+  if (hasIterator && body[Symbol.asyncIterator]) return asyncIterator(body);
   /* c8 ignore start */
 
   if (body.getReader) return readerIterator(body.getReader());
   if (body.stream) return readerIterator(body.stream().getReader());
   if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
+  if (body.pipe) return nodeStreamIterator(body);
   /* c8 ignore stop */
 
   throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
 }
-
-export { responseIterator as default };
 //# sourceMappingURL=index.js.map
