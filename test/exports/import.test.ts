@@ -1,16 +1,19 @@
+import "../lib/polyfill.cjs";
 import { assert } from "chai";
-import crossFetch from "cross-fetch";
 import responseIterator from "response-iterator";
-import decodeUTF8 from "../lib/decodeUTF8.cjs";
+import stringStream from "../lib/stringStream.cjs";
+import toText from "../lib/toText.cjs";
 
 describe("exports .ts", function () {
-  it("cross-fetch", async function () {
-    const res = await crossFetch("https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json");
-
-    let data = "";
-    for await (const chunk of responseIterator(res)) {
-      data += decodeUTF8(chunk);
+  it("string stream", function (done) {
+    const res = stringStream('{ "name": "response-iterator"}');
+    try {
+      toText(responseIterator(res)).then(function (data) {
+        assert.deepEqual(JSON.parse(data).name, "response-iterator");
+        done();
+      });
+    } catch (err) {
+      done(err);
     }
-    assert.deepEqual(JSON.parse(data).name, "response-iterator");
   });
 });

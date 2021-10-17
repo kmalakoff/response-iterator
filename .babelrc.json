@@ -1,34 +1,3 @@
 {
-  "env": {
-    "esm": {
-      "presets": [
-        "@babel/typescript",
-        [
-          "@babel/env",
-          {
-            "modules": "auto",
-            "targets": { "node": "current" }
-          }
-        ]
-      ]
-    },
-    "cjs": {
-      "presets": [
-        "@babel/typescript",
-        [
-          "@babel/env",
-          {
-            "modules": false
-          }
-        ]
-      ]
-    },
-    "umd": {
-      "presets": ["@babel/typescript", "@babel/env"]
-    },
-    "test": {
-      "presets": ["@babel/typescript", "@babel/env"],
-      "plugins": ["@babel/transform-runtime"]
-    }
-  }
+  "extends": "./node_modules/ts-dev-stack/.babelrc.json"
 }

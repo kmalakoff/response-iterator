@@ -1,12 +1,7 @@
 {
+  "extends": "./node_modules/ts-dev-stack/tsconfig.json",
   "compilerOptions": {
-    "downlevelIteration": true,
-    "lib": ["es2015", "dom", "esnext.asynciterable"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "types": ["mocha", "chai"],
-    "allowSyntheticDefaultImports": true
+    "lib": ["es2015", "dom", "esnext.asynciterable"]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
