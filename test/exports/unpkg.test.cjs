@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+require("../lib/polyfill.cjs");
 const { assert } = require("chai");
-const crossFetch = require("cross-fetch");
 const responseIterator = require("response-iterator/dist/umd/response-iterator.js");
-const decodeUTF8 = require("../lib/decodeUTF8.cjs");
+const stringStream = require("../lib/stringStream.cjs");
+const toText = require("../lib/toText.cjs");
 
 describe("exports response-iterator/dist/umd/response-iterator.js", function () {
-  it("cross-fetch", async function () {
-    const res = await crossFetch("https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json");
-
-    let data = "";
-    for await (const chunk of responseIterator(res)) {
-      data += decodeUTF8(chunk);
+  it("string stream", function (done) {
+    const res = stringStream('{ "name": "response-iterator"}');
+    try {
+      toText(responseIterator(res)).then(function (data) {
+        assert.deepEqual(JSON.parse(data).name, "response-iterator");
+        done();
+      });
+    } catch (err) {
+      done(err);
     }
-    assert.deepEqual(JSON.parse(data).name, "response-iterator");
   });
 });
