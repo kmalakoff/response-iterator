@@ -1,7 +1,8 @@
 {
   "extends": "./node_modules/ts-dev-stack/tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2015", "dom", "esnext.asynciterable"]
+    "lib": ["es2015", "dom", "esnext.asynciterable"],
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
