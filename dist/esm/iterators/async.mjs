@@ -11,4 +11,4 @@ export default function asyncIterator(source) {
 
   };
 }
-//# sourceMappingURL=async.js.map
+//# sourceMappingURL=async.mjs.map

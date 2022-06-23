@@ -5,7 +5,6 @@
     "@types/*",
     "@typescript-eslint/*",
     "eslint-*",
-    "chai",
     "isomorphic-fetch",
     "node-fetch",
     "axios",

@@ -31,4 +31,4 @@ export default function promiseIterator(promise) {
   return iterator;
 }
 /* c8 ignore stop */
-//# sourceMappingURL=promise.js.map
+//# sourceMappingURL=promise.mjs.map

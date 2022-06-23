@@ -1,7 +1,7 @@
-import asyncIterator from "./iterators/async.js";
-import nodeStreamIterator from "./iterators/nodeStream.js";
-import promiseIterator from "./iterators/promise.js";
-import readerIterator from "./iterators/reader.js";
+import asyncIterator from "./iterators/async.mjs";
+import nodeStreamIterator from "./iterators/nodeStream.mjs";
+import promiseIterator from "./iterators/promise.mjs";
+import readerIterator from "./iterators/reader.mjs";
 const hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
@@ -31,4 +31,4 @@ export default function responseIterator(response) {
 
   throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
 }
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.mjs.map

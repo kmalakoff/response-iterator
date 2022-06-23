@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require("../lib/polyfill.cjs");
-const { assert } = require("chai");
+const assert = require("assert");
 const responseIterator = require("response-iterator/dist/umd/response-iterator.min.js");
 const stringStream = require("../lib/stringStream.cjs");
 const toText = require("../lib/toText.cjs");

@@ -84,4 +84,4 @@ export default function nodeStreamIterator(stream) {
   return iterator;
 }
 /* c8 ignore stop */
-//# sourceMappingURL=nodeStream.js.map
+//# sourceMappingURL=nodeStream.mjs.map

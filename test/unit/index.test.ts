@@ -1,5 +1,5 @@
 import "../lib/polyfill.cjs";
-import { assert } from "chai";
+import assert from "assert";
 import responseIterator from "response-iterator";
 import decodeUTF8 from "../lib/decodeUTF8.cjs";
 import stringStream from "../lib/stringStream.cjs";
@@ -11,12 +11,22 @@ const hasConst = typeof process !== "undefined" && +process.versions.node.split(
 
 describe("response-iterator", function () {
   it("error: no response", function () {
-    assert.throw(() => responseIterator(undefined));
+    try {
+      responseIterator(undefined);
+      assert.ok(false);
+    } catch (err) {
+      assert(err);
+    }
   });
 
   it("error: unexpected response", function () {
     const response = "not-a-response";
-    assert.throw(() => responseIterator(response as unknown as Response));
+    try {
+      responseIterator(response as unknown as Response);
+      assert.ok(false);
+    } catch (err) {
+      assert(err);
+    }
   });
 
   it("string stream", function (done) {

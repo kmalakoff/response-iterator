@@ -18,4 +18,4 @@ export default function readerIterator(reader) {
   return iterator;
 }
 /* c8 ignore stop */
-//# sourceMappingURL=reader.js.map
+//# sourceMappingURL=reader.mjs.map
