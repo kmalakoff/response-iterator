@@ -1,5 +1,5 @@
 import "../lib/polyfill.cjs";
-import { assert } from "chai";
+import assert from "assert";
 import got from "got";
 import nodeFetch from "node-fetch";
 import { fetch as undiciFetch } from "undici";
