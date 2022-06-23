@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "dist/esm/index.mjs",
   "files": [
     "dist"
   ],
@@ -61,7 +61,7 @@
     "isomorphic-fetch": "^3.0.0",
     "readable-stream-2": "npm:readable-stream@2.3.7",
     "readable-stream-3": "npm:readable-stream@4.0.0",
-    "ts-dev-stack": "^0.1.8",
+    "ts-dev-stack": "^0.2.1",
     "undici": "^5.5.1"
   },
   "type": "module",
@@ -70,7 +70,7 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
+      "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.js",
       "types": "./dist/esm/index.d.ts"
     },
