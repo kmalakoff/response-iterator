@@ -1,5 +1,5 @@
 import "../lib/polyfill.cjs";
-import { assert } from "chai";
+import assert from "assert";
 import responseIterator from "response-iterator";
 import stringStream from "../lib/stringStream.cjs";
 import toText from "../lib/toText.cjs";
