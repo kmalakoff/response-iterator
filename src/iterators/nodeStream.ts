@@ -1,6 +1,6 @@
-import { Readable as NodeReadableStream } from "stream";
+import { Readable as NodeReadableStream } from 'stream';
 
-const hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
 /* c8 ignore start */
 export default function nodeStreamIterator<T>(stream: NodeReadableStream): AsyncIterableIterator<T> {
@@ -34,17 +34,17 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
 
   cleanup = function () {
     cleanup = null;
-    stream.removeListener("data", onData);
-    stream.removeListener("error", onError);
-    stream.removeListener("end", onEnd);
-    stream.removeListener("finish", onEnd);
-    stream.removeListener("close", onEnd);
+    stream.removeListener('data', onData);
+    stream.removeListener('error', onError);
+    stream.removeListener('end', onEnd);
+    stream.removeListener('finish', onEnd);
+    stream.removeListener('close', onEnd);
   };
-  stream.on("data", onData);
-  stream.on("error", onError);
-  stream.on("end", onEnd);
-  stream.on("finish", onEnd);
-  stream.on("close", onEnd);
+  stream.on('data', onData);
+  stream.on('error', onError);
+  stream.on('end', onEnd);
+  stream.on('finish', onEnd);
+  stream.on('close', onEnd);
 
   function getNext(): Promise<IteratorResult<T, boolean>> {
     return new Promise(function (resolve, reject) {
