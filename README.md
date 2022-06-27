@@ -6,11 +6,11 @@ Creates an async iterator for a variety of inputs in the browser and node. Suppo
 
 ```typescript
 // import "isomorphic-fetch"; // node only
-import responseIterator from "response-iterator";
+import responseIterator from 'response-iterator';
 
-const res = await fetch("https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json");
+const res = await fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
 
-let data = "";
+let data = '';
 for await (const chunk of responseIterator(res)) {
   data += chunk;
 }
@@ -20,12 +20,12 @@ console.log(JSON.parse(data).name); // "response-iterator"
 ### Example 2
 
 ```typescript
-import crossFetch from "cross-fetch";
-import responseIterator from "response-iterator";
+import crossFetch from 'cross-fetch';
+import responseIterator from 'response-iterator';
 
-const res = await crossFetch("https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json");
+const res = await crossFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
 
-let data = "";
+let data = '';
 for await (const chunk of responseIterator(res)) {
   data += chunk;
 }
