@@ -1,13 +1,4 @@
 {
   "extends": "./node_modules/ts-dev-stack/.depcheckrc.json",
-  "ignores": [
-    "response-iterator",
-    "@types/*",
-    "@typescript-eslint/*",
-    "eslint-*",
-    "isomorphic-fetch",
-    "node-fetch",
-    "axios",
-    "readable-stream-*"
-  ]
+  "ignores": ["response-iterator", "@types/*", "@typescript-eslint/*", "eslint-*", "isomorphic-fetch", "node-fetch", "axios", "readable-stream-*"]
 }

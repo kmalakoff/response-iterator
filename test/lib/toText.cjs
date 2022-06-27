@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const decodeUTF8 = require("./decodeUTF8.cjs");
+const decodeUTF8 = require('./decodeUTF8.cjs');
 
 function text(data, iterator) {
   return new Promise(function (resolve, reject) {
@@ -15,5 +15,5 @@ function text(data, iterator) {
 }
 
 module.exports = function toText(iterator) {
-  return text("", iterator);
+  return text('', iterator);
 };

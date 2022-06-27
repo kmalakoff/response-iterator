@@ -61,7 +61,7 @@
     "isomorphic-fetch": "^3.0.0",
     "readable-stream-2": "npm:readable-stream@2.3.7",
     "readable-stream-3": "npm:readable-stream@4.0.0",
-    "ts-dev-stack": "^0.2.1",
+    "ts-dev-stack": "^0.3.2",
     "undici": "^5.5.1"
   },
   "type": "module",
@@ -72,10 +72,11 @@
     ".": {
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     },
     "./*": "./*"
   },
-  "types": "dist/esm/index.d.ts",
+  "source": "src/index.ts",
+  "types": "dist/types/index.d.ts",
   "unpkg": "dist/umd/response-iterator.js"
 }
