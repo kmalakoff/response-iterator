@@ -1,4 +1,4 @@
-const hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
 /* c8 ignore start */
 export default function promiseIterator<T>(promise): AsyncIterableIterator<T> {
