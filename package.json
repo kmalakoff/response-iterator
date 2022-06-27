@@ -61,7 +61,7 @@
     "isomorphic-fetch": "^3.0.0",
     "readable-stream-2": "npm:readable-stream@2.3.7",
     "readable-stream-3": "npm:readable-stream@4.0.0",
-    "ts-dev-stack": "^0.3.2",
+    "ts-dev-stack": "^0.3.3",
     "undici": "^5.5.1"
   },
   "type": "module",
