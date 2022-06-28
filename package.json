@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsds build:dist",
+    "build": "tsds build",
     "deploy": "tsds deploy",
     "format": "tsds format",
     "lint": "tsds lint",
@@ -61,7 +61,7 @@
     "isomorphic-fetch": "^3.0.0",
     "readable-stream-2": "npm:readable-stream@2.3.7",
     "readable-stream-3": "npm:readable-stream@4.0.0",
-    "ts-dev-stack": "^0.3.3",
+    "ts-dev-stack": "^0.4.1",
     "undici": "^5.5.1"
   },
   "type": "module",
@@ -76,7 +76,9 @@
     },
     "./*": "./*"
   },
-  "source": "src/index.ts",
+  "tsds": {
+    "source": "src/index.ts"
+  },
   "types": "dist/types/index.d.ts",
   "unpkg": "dist/umd/response-iterator.js"
 }
