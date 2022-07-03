@@ -1,8 +1,8 @@
-const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
+var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 /* c8 ignore start */ export default function promiseIterator(promise) {
-    let resolved = false;
-    const iterator = {
-        next () {
+    var resolved = false;
+    var iterator = {
+        next: function next() {
             if (resolved) return Promise.resolve({
                 value: undefined,
                 done: true
@@ -11,10 +11,10 @@ const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
             return new Promise(function(resolve, reject) {
                 promise.then(function(value) {
                     resolve({
-                        value,
+                        value: value,
                         done: false
                     });
-                }).catch(reject);
+                })["catch"](reject);
             });
         }
     };
