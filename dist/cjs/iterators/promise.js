@@ -18,7 +18,7 @@ function promiseIterator(promise) {
                         value: value,
                         done: false
                     });
-                })["catch"](reject);
+                }).catch(reject);
             });
         }
     };

@@ -121,7 +121,7 @@
                           value: value,
                           done: false
                       });
-                  })["catch"](reject);
+                  }).catch(reject);
               });
           }
       };
@@ -171,3 +171,4 @@
   return responseIterator;
 
 }));
+//# sourceMappingURL=response-iterator.js.map

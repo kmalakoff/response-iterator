@@ -1,7 +1,7 @@
-var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 /* c8 ignore start */ export default function readerIterator(reader) {
-    var iterator = {
-        next: function next() {
+    const iterator = {
+        next () {
             return reader.read();
         }
     };
