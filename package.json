@@ -1,33 +1,7 @@
 {
   "name": "response-iterator",
-  "description": "Creates an async iterator for a variety of inputs in the browser and node. Supports fetch, node-fetch, and cross-fetch",
   "version": "0.2.6",
-  "author": {
-    "email": "kmalakoff@gmail.com",
-    "name": "Kevin Malakoff",
-    "url": "https://github.com/kmalakoff"
-  },
-  "license": "MIT",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.mjs",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsds build",
-    "deploy": "tsds deploy",
-    "format": "tsds format",
-    "lint": "tsds lint",
-    "test": "tsds test:node && tsds test:node \"test/**/*.test-node.*\" && tsds test:browser"
-  },
-  "homepage": "https://github.com/kmalakoff/response-iterator#README.md",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/kmalakoff/response-iterator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kmalakoff/response-iterator/issues"
-  },
+  "description": "Creates an async iterator for a variety of inputs in the browser and node. Supports fetch, node-fetch, and cross-fetch",
   "keywords": [
     "Symbol",
     "Symbol.asyncIterator",
@@ -51,22 +25,21 @@
     "typescript",
     "undici"
   ],
-  "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/node": "^18.0.1",
-    "@types/node-fetch": "^3.0.3",
-    "cross-fetch": "^3.1.5",
-    "got": "^12.1.0",
-    "isomorphic-fetch": "^3.0.0",
-    "readable-stream-2": "npm:readable-stream@2.3.7",
-    "readable-stream-3": "npm:readable-stream@4.0.0",
-    "ts-dev-stack": "^0.6.5",
-    "undici": "^5.6.0"
+  "homepage": "https://github.com/kmalakoff/response-iterator#README.md",
+  "bugs": {
+    "url": "https://github.com/kmalakoff/response-iterator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kmalakoff/response-iterator.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Kevin Malakoff",
+    "email": "kmalakoff@gmail.com",
+    "url": "https://github.com/kmalakoff"
   },
   "type": "module",
-  "engines": {
-    "node": ">=0.8"
-  },
   "exports": {
     ".": {
       "import": "./dist/esm/index.mjs",
@@ -75,9 +48,38 @@
     },
     "./*": "./*"
   },
+  "main": "dist/cjs/index.js",
+  "unpkg": "dist/umd/response-iterator.js",
+  "module": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsds build",
+    "deploy": "tsds deploy",
+    "format": "tsds format",
+    "lint": "tsds lint",
+    "test": "tsds test:node && tsds test:node \"test/**/*.test-node.*\" && tsds test:browser",
+    "test:engines": "nvu engines tsds test:node && tsds test:browser"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.3",
+    "@types/node-fetch": "^3.0.3",
+    "cross-fetch": "^3.1.5",
+    "got": "^12.3.1",
+    "isomorphic-fetch": "^3.0.0",
+    "readable-stream-2": "npm:readable-stream@2.3.7",
+    "readable-stream-3": "npm:readable-stream@4.1.0",
+    "ts-dev-stack": "^0.8.10",
+    "undici": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
   "tsds": {
     "source": "src/index.ts"
-  },
-  "types": "dist/types/index.d.ts",
-  "unpkg": "dist/umd/response-iterator.js"
+  }
 }
