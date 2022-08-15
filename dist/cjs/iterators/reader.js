@@ -2,7 +2,13 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-module.exports = readerIterator;
+Object.defineProperty(exports, /* c8 ignore start */ "default" /* c8 ignore stop */ , {
+    enumerable: true,
+    get: function() {
+        return readerIterator;
+    }
+});
+var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 function readerIterator(reader) {
     var iterator = {
         next: function next() {
@@ -15,5 +21,10 @@ function readerIterator(reader) {
         };
     }
     return iterator;
-} /* c8 ignore stop */ 
-var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+}
+
+if ((typeof exports.default === 'function' || (typeof exports.default === 'object' && exports.default !== null)) && typeof exports.default.__esModule === 'undefined') {
+  Object.defineProperty(exports.default, '__esModule', { value: true });
+  for (var key in exports) exports.default[key] = exports[key];
+  module.exports = exports.default;
+}
