@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = function stringStream(string) {
   if (typeof window === 'undefined') {
     let Readable = null;
     try {
       Readable = require('readable-stream-3');
-    } catch (err) {
+    } catch (_err) {
       Readable = require('readable-stream-2');
     }
 
@@ -26,8 +25,9 @@ module.exports = function stringStream(string) {
       }
     }
     return new StringStream(string);
-  } else {
-    /* eslint-disable-next-line no-undef */
+  }
+  // biome-ignore lint/style/noUselessElse: <explanation>
+  else {
     return new Response(new Blob([string], { type: 'application/text' }));
   }
 };

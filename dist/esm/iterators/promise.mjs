@@ -8,8 +8,8 @@ const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
                 done: true
             });
             resolved = true;
-            return new Promise(function(resolve, reject) {
-                promise.then(function(value) {
+            return new Promise((resolve, reject)=>{
+                promise.then((value)=>{
                     resolve({
                         value,
                         done: false
