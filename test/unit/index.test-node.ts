@@ -1,30 +1,28 @@
-import '../lib/polyfill.cjs';
 import assert from 'assert';
 import got from 'got';
 import nodeFetch from 'node-fetch';
-import { fetch as undiciFetch } from 'undici';
 import responseIterator from 'response-iterator';
+import { fetch as undiciFetch } from 'undici';
 import decodeUTF8 from '../lib/decodeUTF8.cjs';
+import '../lib/polyfill.cjs';
 import toText from '../lib/toText.cjs';
 
 const hasAsync = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 10;
 
-describe('response-iterator node', function () {
-  it('node-fetch', function (done) {
-    nodeFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then(function (res) {
-      try {
-        toText(responseIterator(res)).then(function (data) {
+describe('response-iterator node', () => {
+  it('node-fetch', (done) => {
+    nodeFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
+      toText(responseIterator(res))
+        .then((data) => {
           assert.deepEqual(JSON.parse(data).name, 'response-iterator');
           done();
-        });
-      } catch (err) {
-        done(err);
-      }
+        })
+        .catch((err) => done(err));
     });
   });
 
   !hasAsync ||
-    it('node-fetch - async', async function () {
+    it('node-fetch - async', async () => {
       const res = await nodeFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
 
       let data = '';
@@ -34,29 +32,25 @@ describe('response-iterator node', function () {
       assert.deepEqual(JSON.parse(data).name, 'response-iterator');
     });
 
-  it('got stream', function (done) {
+  it('got stream', (done) => {
     const res = got.stream('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
-    try {
-      toText(responseIterator(res)).then(function (data) {
+    toText(responseIterator(res))
+      .then((data) => {
         assert.deepEqual(JSON.parse(data).name, 'response-iterator');
         done();
-      });
-    } catch (err) {
-      done(err);
-    }
+      })
+      .catch((err) => done(err));
   });
 
   !undiciFetch ||
-    it('undici', function (done) {
-      undiciFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then(function (res) {
-        try {
-          toText(responseIterator(res)).then(function (data) {
+    it('undici', (done) => {
+      undiciFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
+        toText(responseIterator(res))
+          .then((data) => {
             assert.deepEqual(JSON.parse(data).name, 'response-iterator');
             done();
-          });
-        } catch (err) {
-          done(err);
-        }
+          })
+          .catch((err) => done(err));
       });
     });
 });
