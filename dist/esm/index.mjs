@@ -23,4 +23,4 @@ const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
     if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
     if (body.pipe) return nodeStreamIterator(body);
     /* c8 ignore stop */ throw new Error('Unknown body type for responseIterator. Maybe you are not passing a streamable response');
-};
+}
