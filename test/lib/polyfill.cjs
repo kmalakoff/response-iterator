@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 function polyfill() {
+  var root = typeof window === 'undefined' ? global : window;
   if (typeof Promise === 'undefined') {
-    /* eslint-disable-next-line no-undef */
-    const root = typeof window === 'undefined' ? global : window;
     root.Promise = require('pinkie-promise');
+  }
+
+  if (typeof setImmediate === 'undefined') {
+    root.setImmediate = require('next-tick');
   }
 
   if (typeof Buffer !== 'undefined' && !Buffer.from) {

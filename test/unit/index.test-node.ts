@@ -1,31 +1,48 @@
-import '../lib/polyfill.cjs';
 import assert from 'assert';
-import got from 'got';
-import nodeFetch from 'node-fetch';
-import { fetch as undiciFetch } from 'undici';
+import get from 'get-remote';
+
+// @ts-ignore
 import responseIterator from 'response-iterator';
 import decodeUTF8 from '../lib/decodeUTF8.cjs';
+import '../lib/polyfill.cjs';
 import toText from '../lib/toText.cjs';
 
 const hasAsync = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 10;
+const hasConst = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 0;
 
-describe('response-iterator node', function () {
-  it('node-fetch', function (done) {
-    nodeFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then(function (res) {
-      try {
-        toText(responseIterator(res)).then(function (data) {
+describe('response-iterator node', () => {
+  it('get-remote', (done) => {
+    get('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').stream((err, res) => {
+      if (err) return done(err);
+      toText(responseIterator(res))
+        .then((data) => {
           assert.deepEqual(JSON.parse(data).name, 'response-iterator');
           done();
-        });
-      } catch (err) {
-        done(err);
-      }
+        })
+        .catch(done);
     });
   });
 
+  !hasConst ||
+    it('node-fetch', (done) => {
+      import('node-fetch')
+        .then((nodeFetch) => {
+          nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
+            toText(responseIterator(res))
+              .then((data) => {
+                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+                done();
+              })
+              .catch(done);
+          });
+        })
+        .catch(done);
+    });
+
   !hasAsync ||
-    it('node-fetch - async', async function () {
-      const res = await nodeFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
+    it('node-fetch - async', async () => {
+      const nodeFetch = await import('node-fetch');
+      const res = await nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
 
       let data = '';
       for await (const chunk of responseIterator(res)) {
@@ -34,29 +51,34 @@ describe('response-iterator node', function () {
       assert.deepEqual(JSON.parse(data).name, 'response-iterator');
     });
 
-  it('got stream', function (done) {
-    const res = got.stream('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
-    try {
-      toText(responseIterator(res)).then(function (data) {
-        assert.deepEqual(JSON.parse(data).name, 'response-iterator');
-        done();
-      });
-    } catch (err) {
-      done(err);
-    }
-  });
+  !hasAsync ||
+    it('got', (done) => {
+      import('got')
+        .then((got) => {
+          const res = got.default.stream('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
+          toText(responseIterator(res))
+            .then((data) => {
+              assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+              done();
+            })
+            .catch(done);
+        })
+        .catch(done);
+    });
 
-  !undiciFetch ||
-    it('undici', function (done) {
-      undiciFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then(function (res) {
-        try {
-          toText(responseIterator(res)).then(function (data) {
-            assert.deepEqual(JSON.parse(data).name, 'response-iterator');
-            done();
+  !hasAsync ||
+    it('undici', (done) => {
+      import('undici')
+        .then((undici) => {
+          undici.request('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
+            toText(responseIterator(res))
+              .then((data) => {
+                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+                done();
+              })
+              .catch(done);
           });
-        } catch (err) {
-          done(err);
-        }
-      });
+        })
+        .catch(done);
     });
 });
