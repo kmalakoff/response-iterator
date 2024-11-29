@@ -1,6 +1,6 @@
-import { AxiosResponse } from 'axios';
-import { Response as NodeResponse } from 'node-fetch';
-import { Readable as NodeReadableStream } from 'stream';
+import type { Readable as NodeReadableStream } from 'stream';
+import type { AxiosResponse } from 'axios';
+import type { Response as NodeResponse } from 'node-fetch';
 
 // @ts-ignore
 import asyncIterator from './iterators/async.ts';
