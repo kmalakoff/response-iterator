@@ -70,7 +70,7 @@
     "@types/node": "^22.10.1",
     "axios": "0.14.0",
     "cross-fetch": "3.1.5",
-    "get-remote": "^0.8.4",
+    "get-remote": "^1.0.0",
     "got": "^8.3.2",
     "isomorphic-fetch": "3.0.0",
     "next-tick": "^1.1.0",
