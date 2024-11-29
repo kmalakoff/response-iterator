@@ -1,0 +1,1 @@
+ignores: ["response-iterator", "depcheck", "ts-dev-stack", "@types/*", "isomorphic-fetch", "node-fetch", "axios", "readable-stream-*", "pinkie-promise"]
