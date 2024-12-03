@@ -1,0 +1,4 @@
+{
+  "upgrade": true,
+  "reject": ["axios", "cross-fetch", "got", "isomorphic-fetch", "node-fetch", "readable-stream-2", "undici"]
+}
