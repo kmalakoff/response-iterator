@@ -1,19 +1,18 @@
-import '../lib/polyfill.cjs';
 import assert from 'assert';
+// @ts-ignore
 import responseIterator from 'response-iterator';
+import '../lib/polyfill.cjs';
 import stringStream from '../lib/stringStream.cjs';
 import toText from '../lib/toText.cjs';
 
-describe('exports .ts', function () {
-  it('string stream', function (done) {
+describe('exports .ts', () => {
+  it('string stream', (done) => {
     const res = stringStream('{ "name": "response-iterator"}');
-    try {
-      toText(responseIterator(res)).then(function (data) {
+    toText(responseIterator(res))
+      .then((data) => {
         assert.deepEqual(JSON.parse(data).name, 'response-iterator');
         done();
-      });
-    } catch (err) {
-      done(err);
-    }
+      })
+      .catch((err) => done(err));
   });
 });

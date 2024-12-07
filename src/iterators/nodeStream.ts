@@ -18,7 +18,8 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
   function onError(err) {
     error = err;
     const all = waiting.slice();
-    all.forEach(function (pair) {
+
+    all.forEach((pair) => {
       pair[1](err);
     });
     !cleanup || cleanup();
@@ -26,13 +27,14 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
   function onEnd() {
     done = true;
     const all = waiting.slice();
-    all.forEach(function (pair) {
+
+    all.forEach((pair) => {
       pair[0]({ value: undefined, done: true });
     });
     !cleanup || cleanup();
   }
 
-  cleanup = function () {
+  cleanup = () => {
     cleanup = null;
     stream.removeListener('data', onData);
     stream.removeListener('error', onError);
@@ -47,7 +49,7 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
   stream.on('close', onEnd);
 
   function getNext(): Promise<IteratorResult<T, boolean>> {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (error) return reject(error);
       if (data.length) return resolve({ value: data.shift(), done: false });
       if (done) return resolve({ value: undefined, done: true });
