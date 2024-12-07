@@ -5,7 +5,7 @@ module.exports = function stringStream(string) {
     try {
       Readable = require('readable-stream-3');
     } catch (err) {
-      Readable = require('readable-stream-2');
+      Readable = require('readable-stream');
     }
 
     class StringStream extends Readable {
