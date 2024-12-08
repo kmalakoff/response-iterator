@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["undici"]
+  "reject": ["readable-stream"]
 }

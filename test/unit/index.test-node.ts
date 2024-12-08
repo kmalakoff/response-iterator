@@ -62,8 +62,13 @@ describe('response-iterator node', () => {
 
   !hasConst ||
     it('axios stream or blob', (done) => {
+      function skip() {
+        console.log('skipping axios');
+        done();
+      }
+
       import('axios')
-        .then((axios) => {
+        .then((axios) =>
           axios
             .default({
               url: 'https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json',
@@ -78,9 +83,9 @@ describe('response-iterator node', () => {
               } catch (err) {
                 done(err);
               }
-            });
-        })
-        .catch(done);
+            })
+        )
+        .catch(skip);
     });
 
   it('get-remote stream', (done) => {
@@ -99,6 +104,11 @@ describe('response-iterator node', () => {
 
   !hasConst ||
     it('node-fetch', (done) => {
+      function skip() {
+        console.log('skipping node-fetch');
+        done();
+      }
+
       import('node-fetch')
         .then((nodeFetch) => {
           nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
@@ -112,7 +122,7 @@ describe('response-iterator node', () => {
             }
           });
         })
-        .catch(done);
+        .catch(skip);
     });
 
   // it('got stream', (done) => {
@@ -128,11 +138,16 @@ describe('response-iterator node', () => {
   //         done(err);
   //       }
   //     })
-  //     .catch(done);
+  //     .catch(skip);
   // });
 
   !hasConst ||
-    it('fetch or node-fetch', (done) => {
+    it('isomorphic-fetch', (done) => {
+      function skip() {
+        console.log('skipping isomorphic-fetch');
+        done();
+      }
+
       import('isomorphic-fetch')
         .then(() => {
           fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
@@ -146,7 +161,7 @@ describe('response-iterator node', () => {
             }
           });
         })
-        .catch(done);
+        .catch(skip);
     });
 
   !hasIterator ||
@@ -164,6 +179,11 @@ describe('response-iterator node', () => {
 
   !hasConst ||
     it('cross-fetch', (done) => {
+      function skip() {
+        console.log('skipping cross-fetch');
+        done();
+      }
+
       import('cross-fetch')
         .then((crossFetch) => {
           crossFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
@@ -177,13 +197,19 @@ describe('response-iterator node', () => {
             }
           });
         })
-        .catch(done);
+        .catch(skip);
     });
 
   !hasConst ||
     it('undici', (done) => {
+      function skip() {
+        console.log('skipping undici');
+        done();
+      }
+
       import('undici')
         .then((undici) => {
+          if (!undici.fetch) return skip();
           undici.fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
             try {
               toText(responseIterator(res)).then((data: string) => {
@@ -195,6 +221,6 @@ describe('response-iterator node', () => {
             }
           });
         })
-        .catch(done);
+        .catch(skip);
     });
 });
