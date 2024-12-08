@@ -4,7 +4,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.responseIterator = factory());
 })(this, (function () { 'use strict';
 
-  function _defineProperty(obj, key, value) {
+  function _define_property(obj, key, value) {
       if (key in obj) {
           Object.defineProperty(obj, key, {
               value: value,
@@ -19,7 +19,7 @@
   }
   function asyncIterator(source) {
       var iterator = source[Symbol.asyncIterator]();
-      return _defineProperty({
+      return _define_property({
           next: function next() {
               return iterator.next();
           }
@@ -28,25 +28,30 @@
       });
   }
 
-  var hasIterator$3 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  var hasIterator$3 = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
   /* c8 ignore start */ function nodeStreamIterator(stream) {
-      var onData = function onData(chunk) {
+      var cleanup = null;
+      var error = null;
+      var done = false;
+      var data = [];
+      var waiting = [];
+      function onData(chunk) {
           if (error) return;
           if (waiting.length) return waiting.shift()[0]({
               value: chunk,
               done: false
           });
           data.push(chunk);
-      };
-      var onError = function onError(err) {
+      }
+      function onError(err) {
           error = err;
           var all = waiting.slice();
           all.forEach(function(pair) {
               pair[1](err);
           });
           !cleanup || cleanup();
-      };
-      var onEnd = function onEnd() {
+      }
+      function onEnd() {
           done = true;
           var all = waiting.slice();
           all.forEach(function(pair) {
@@ -56,8 +61,21 @@
               });
           });
           !cleanup || cleanup();
+      }
+      cleanup = function() {
+          cleanup = null;
+          stream.removeListener('data', onData);
+          stream.removeListener('error', onError);
+          stream.removeListener('end', onEnd);
+          stream.removeListener('finish', onEnd);
+          stream.removeListener('close', onEnd);
       };
-      var getNext = function getNext() {
+      stream.on('data', onData);
+      stream.on('error', onError);
+      stream.on('end', onEnd);
+      stream.on('finish', onEnd);
+      stream.on('close', onEnd);
+      function getNext() {
           return new Promise(function(resolve, reject) {
               if (error) return reject(error);
               if (data.length) return resolve({
@@ -73,25 +91,7 @@
                   reject
               ]);
           });
-      };
-      var cleanup = null;
-      var error = null;
-      var done = false;
-      var data = [];
-      var waiting = [];
-      cleanup = function() {
-          cleanup = null;
-          stream.removeListener("data", onData);
-          stream.removeListener("error", onError);
-          stream.removeListener("end", onEnd);
-          stream.removeListener("finish", onEnd);
-          stream.removeListener("close", onEnd);
-      };
-      stream.on("data", onData);
-      stream.on("error", onError);
-      stream.on("end", onEnd);
-      stream.on("finish", onEnd);
-      stream.on("close", onEnd);
+      }
       var iterator = {
           next: function next() {
               return getNext();
@@ -103,9 +103,9 @@
           };
       }
       return iterator;
-  }
+  } /* c8 ignore stop */
 
-  var hasIterator$2 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  var hasIterator$2 = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
   /* c8 ignore start */ function promiseIterator(promise) {
       var resolved = false;
       var iterator = {
@@ -131,9 +131,9 @@
           };
       }
       return iterator;
-  }
+  } /* c8 ignore stop */
 
-  var hasIterator$1 = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  var hasIterator$1 = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
   /* c8 ignore start */ function readerIterator(reader) {
       var iterator = {
           next: function next() {
@@ -146,14 +146,14 @@
           };
       }
       return iterator;
-  }
+  } /* c8 ignore stop */
 
   // @ts-ignore
-  var hasIterator = typeof Symbol !== "undefined" && Symbol.asyncIterator;
+  var hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
   /**
    * @param response A response. Supports fetch, node-fetch, and cross-fetch
    */ function responseIterator(response) {
-      if (response === undefined) throw new Error("Missing response for responseIterator");
+      if (response === undefined) throw new Error('Missing response for responseIterator');
       // determine the body
       var body = response;
       if (response.body) body = response.body;
@@ -165,7 +165,7 @@
       if (body.stream) return readerIterator(body.stream().getReader());
       if (body.arrayBuffer) return promiseIterator(body.arrayBuffer());
       if (body.pipe) return nodeStreamIterator(body);
-      /* c8 ignore stop */ throw new Error("Unknown body type for responseIterator. Maybe you are not passing a streamable response");
+      /* c8 ignore stop */ throw new Error('Unknown body type for responseIterator. Maybe you are not passing a streamable response');
   }
 
   return responseIterator;
