@@ -1,15 +1,11 @@
-import { AxiosResponse } from 'axios';
-import { Response as NodeResponse } from 'node-fetch';
-import { Readable as NodeReadableStream } from 'stream';
+import type { Readable as NodeReadableStream } from 'stream';
+import type { AxiosResponse } from 'axios';
+import type { Response as NodeResponse } from 'node-fetch';
 
-// @ts-ignore
-import asyncIterator from './iterators/async.ts';
-// @ts-ignore
-import nodeStreamIterator from './iterators/nodeStream.ts';
-// @ts-ignore
-import promiseIterator from './iterators/promise.ts';
-// @ts-ignore
-import readerIterator from './iterators/reader.ts';
+import asyncIterator from './iterators/async.js';
+import nodeStreamIterator from './iterators/nodeStream.js';
+import promiseIterator from './iterators/promise.js';
+import readerIterator from './iterators/reader.js';
 
 interface CrossFetchResponse {
   _bodyBlob: Blob;
