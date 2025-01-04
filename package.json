@@ -1,6 +1,6 @@
 {
   "name": "response-iterator",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Creates an async iterator for a variety of inputs in the browser and node. Supports fetch, node-fetch, and cross-fetch",
   "keywords": [
     "Symbol",
