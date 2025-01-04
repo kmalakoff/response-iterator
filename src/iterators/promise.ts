@@ -8,9 +8,9 @@ export default function promiseIterator<T>(promise): AsyncIterableIterator<T> {
     next(): Promise<IteratorResult<T, boolean>> {
       if (resolved) return Promise.resolve({ value: undefined, done: true });
       resolved = true;
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         promise
-          .then(function (value) {
+          .then((value) => {
             resolve({ value, done: false });
           })
           .catch(reject);
