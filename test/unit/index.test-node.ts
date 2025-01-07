@@ -103,7 +103,7 @@ describe('response-iterator node', () => {
 
   it('get-remote stream', (done) => {
     const _res = get('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').stream((err, res) => {
-      assert.ok(!err, err ? err.message : '');
+      if (err) return done(err);
       try {
         toText(responseIterator(res)).then((data: string) => {
           assert.deepEqual(JSON.parse(data).name, 'response-iterator');
