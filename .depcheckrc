@@ -1,1 +1,1 @@
-ignores: ["@types/*", "response-iterator", "@biomejs/*", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]
+ignores: ["response-iterator", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]
