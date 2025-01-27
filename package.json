@@ -66,9 +66,6 @@
     "test:node": "tsds test:node --no-timeouts && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
     "version": "tsds version"
   },
-  "dependencies": {
-    "readable-stream": "^2.3.8"
-  },
   "devDependencies": {
     "@types/mocha": "*",
     "@types/node": "*",
@@ -79,6 +76,7 @@
     "isomorphic-fetch": "*",
     "node-fetch": "*",
     "pinkie-promise": "*",
+    "readable-stream": "^2.3.8",
     "tsds-web-test-runner": "*",
     "undici": "*"
   },
