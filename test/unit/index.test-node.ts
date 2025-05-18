@@ -49,29 +49,29 @@ describe('response-iterator node', () => {
     }
   });
 
-  // it('string stream', (done) => {
-  //   const res = stringStream('{ "name": "response-iterator"}', 'utf8');
-  //   try {
-  //     toText(responseIterator(res)).then((data: string) => {
-  //       assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-  //       done();
-  //     });
-  //   } catch (err) {
-  //     done(err);
-  //   }
-  // });
+  it('string stream', (done) => {
+    const res = stringStream('{ "name": "response-iterator"}', 'utf8');
+    try {
+      toText(responseIterator(res)).then((data: string) => {
+        assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+        done();
+      });
+    } catch (err) {
+      done(err);
+    }
+  });
 
-  // it('string stream - async', async () => {
-  //   const res = stringStream('{ "name": "response-iterator"}', 'utf8');
+  it('string stream - async', async () => {
+    const res = stringStream('{ "name": "response-iterator"}', 'utf8');
 
-  //   const iter = responseIterator(res);
+    const iter = responseIterator(res);
 
-  //   let data = '';
-  //   for await (const chunk of iter) {
-  //     data += decodeUTF8(chunk);
-  //   }
-  //   assert.deepEqual(JSON.parse(data).name, 'response-iterator');
-  // });
+    let data = '';
+    for await (const chunk of iter) {
+      data += decodeUTF8(chunk);
+    }
+    assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+  });
 
   !hasConst ||
     it('axios stream or blob', (done) => {
