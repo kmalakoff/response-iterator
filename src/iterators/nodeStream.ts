@@ -3,7 +3,7 @@ import type { Readable as NodeReadableStream } from 'stream';
 const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
 /* c8 ignore start */
-export default function nodeStreamIterator<T>(stream: NodeReadableStream): AsyncIterableIterator<T> {
+export default function nodeStreamIterator<T, TReturn = unknown, TNext = unknown>(stream: NodeReadableStream): AsyncIterableIterator<T, TReturn, TNext> {
   let cleanup = null;
   let error = null;
   let done = false;
@@ -46,7 +46,7 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
   stream.on('finish', onEnd);
   stream.on('close', onEnd);
 
-  function getNext(): Promise<IteratorResult<T, boolean>> {
+  function getNext(): Promise<IteratorResult<T, TReturn>> {
     return new Promise((resolve, reject) => {
       if (error) return reject(error);
       if (data.length) return resolve({ value: data.shift(), done: false });
@@ -56,17 +56,17 @@ export default function nodeStreamIterator<T>(stream: NodeReadableStream): Async
   }
 
   const iterator = {
-    next(): Promise<IteratorResult<T, boolean>> {
+    next(): Promise<IteratorResult<T, TReturn>> {
       return getNext();
     },
   };
 
   if (hasIterator) {
-    iterator[Symbol.asyncIterator] = function (): AsyncIterator<T> {
+    iterator[Symbol.asyncIterator] = function (): AsyncIterator<T, TReturn> {
       return this;
     };
   }
 
-  return iterator as AsyncIterableIterator<T>;
+  return iterator as AsyncIterableIterator<T, TReturn, TNext>;
 }
 /* c8 ignore stop */
