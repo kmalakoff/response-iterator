@@ -16,7 +16,7 @@ const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 /**
  * @param response A response. Supports fetch, node-fetch, and cross-fetch
  */
-export default function responseIterator<T>(response: unknown): AsyncIterableIterator<T> {
+export default function responseIterator<T, TReturn = unknown, TNext = unknown>(response: unknown): AsyncIterableIterator<T, TReturn, TNext> {
   if (response === undefined) throw new Error('Missing response for responseIterator');
 
   // determine the body
@@ -29,12 +29,12 @@ export default function responseIterator<T>(response: unknown): AsyncIterableIte
   /* c8 ignore stop */
 
   // adapt the body
-  if (hasIterator && body[Symbol.asyncIterator]) return asyncIterator<T>(body as AsyncIterableIterator<T>);
+  if (hasIterator && body[Symbol.asyncIterator]) return asyncIterator<T, TReturn, TNext>(body as AsyncIterableIterator<T, TReturn, TNext>);
   /* c8 ignore start */
-  if ((body as ReadableStream<T>).getReader) return readerIterator<T>((body as ReadableStream<T>).getReader());
-  if ((body as Blob).stream) return readerIterator<T>(((body as Blob).stream() as unknown as ReadableStream<T>).getReader());
-  if ((body as Blob).arrayBuffer) return promiseIterator<T>((body as Blob).arrayBuffer());
-  if ((body as NodeReadableStream).pipe) return nodeStreamIterator<T>(body as NodeReadableStream);
+  if ((body as ReadableStream<T>).getReader) return readerIterator<T, TReturn, TNext>((body as ReadableStream<T>).getReader());
+  if ((body as Blob).stream) return readerIterator<T, TReturn, TNext>(((body as Blob).stream() as unknown as ReadableStream<T>).getReader());
+  if ((body as Blob).arrayBuffer) return promiseIterator<T, TReturn, TNext>((body as Blob).arrayBuffer() as unknown as Promise<T>);
+  if ((body as NodeReadableStream).pipe) return nodeStreamIterator<T, TReturn, TNext>(body as NodeReadableStream);
   /* c8 ignore stop */
 
   throw new Error('Unknown body type for responseIterator. Maybe you are not passing a streamable response');
