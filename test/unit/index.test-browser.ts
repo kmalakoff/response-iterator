@@ -2,11 +2,8 @@ import '../lib/polyfill.ts';
 import assert from 'assert';
 // @ts-ignore
 import responseIterator from 'response-iterator';
-// @ts-ignore
 import decodeUTF8 from '../lib/decodeUTF8.ts';
-// @ts-ignore
 import stringStream from '../lib/stringStream.browser.ts';
-// @ts-ignore
 import toText from '../lib/toText.ts';
 
 const hasAsync = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 10;
