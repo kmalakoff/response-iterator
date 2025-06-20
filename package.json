@@ -60,8 +60,8 @@
     "format": "biome check --write --unsafe",
     "test": "npm run test:node && npm run test:browser",
     "test:browser": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\"",
-    "test:engines": "nvu engines npm run test:node && npm run test:browser",
-    "test:node": "tsds test:node --no-timeouts && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
+    "test:engines": "nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\" && npm run test:browser",
+    "test:node": "mocha --no-timeouts \"test/**/*.test.*\" && mocha --no-timeouts \"test/**/*.test-node.*\"",
     "version": "tsds version"
   },
   "devDependencies": {

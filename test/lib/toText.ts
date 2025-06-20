@@ -1,4 +1,3 @@
-// @ts-ignore
 import decodeUTF8 from './decodeUTF8.ts';
 
 function text(data, iterator) {
