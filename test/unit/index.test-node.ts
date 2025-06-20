@@ -5,11 +5,8 @@ import get from 'get-remote';
 
 // @ts-ignore
 import responseIterator from 'response-iterator';
-// @ts-ignore
 import decodeUTF8 from '../lib/decodeUTF8.ts';
-// @ts-ignore
 import stringStream from '../lib/stringStream.node.ts';
-// @ts-ignore
 import toText from '../lib/toText.ts';
 
 const hasConst = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 0;
@@ -17,16 +14,13 @@ const hasConst = typeof process !== 'undefined' && +process.versions.node.split(
 describe('response-iterator node', () => {
   (() => {
     // patch and restore promise
-    const root = typeof global !== 'undefined' ? global : window;
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = root.Promise;
-      // @ts-ignore
-      root.Promise = Pinkie;
+      global.Promise = Pinkie;
     });
     after(() => {
-      root.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 
