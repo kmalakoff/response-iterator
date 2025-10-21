@@ -10,9 +10,7 @@ export default function stringStream(string: string, encoding: BufferEncoding): 
       if (ended) return;
       ended = true;
       setTimeout(() => {
-        // @ts-ignore
         this.push(Buffer.from(string, encoding));
-        // @ts-ignore
         this.push(null);
       }, 0);
     },
