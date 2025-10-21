@@ -3,7 +3,6 @@ import '../lib/polyfill.ts';
 import assert from 'assert';
 import get from 'get-remote';
 
-// @ts-ignore
 import responseIterator from 'response-iterator';
 import decodeUTF8 from '../lib/decodeUTF8.ts';
 import stringStream from '../lib/stringStream.node.ts';
