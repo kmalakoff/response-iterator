@@ -1,5 +1,4 @@
 import assert from 'assert';
-// @ts-ignore
 import responseIterator from 'response-iterator';
 
 describe('exports .ts', () => {
