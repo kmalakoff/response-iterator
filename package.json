@@ -55,16 +55,17 @@
   ],
   "scripts": {
     "build": "tsds build",
-    "deploy": "tsds deploy",
     "docs": "tsds docs",
     "format": "biome check --write --unsafe",
+    "prepublishOnly": "tsds validate",
     "test": "npm run test:node && npm run test:browser",
     "test:browser": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\"",
     "test:engines": "nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\" && npm run test:browser",
-    "test:node": "mocha --no-timeouts \"test/**/*.test.*\" && mocha --no-timeouts \"test/**/*.test-node.*\"",
+    "test:node": "tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
     "version": "tsds version"
   },
   "devDependencies": {
+    "@biomejs/biome": "*",
     "@types/mocha": "*",
     "@types/node": "*",
     "@web/dev-server-import-maps": "*",
@@ -73,8 +74,10 @@
     "get-remote": "*",
     "isomorphic-fetch": "*",
     "node-fetch": "*",
+    "node-version-use": "*",
     "pinkie-promise": "*",
     "readable-stream": "^2.3.8",
+    "ts-dev-stack": "*",
     "tsds-web-test-runner": "*",
     "undici": "*"
   },

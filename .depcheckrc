@@ -1,1 +1,1 @@
-ignores: ["response-iterator", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]
+ignores: ["node-version-use", "ts-dev-stack", "@biomejs/biome", "response-iterator", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]
