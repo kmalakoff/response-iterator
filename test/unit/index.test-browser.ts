@@ -1,4 +1,3 @@
-import '../lib/polyfill.ts';
 import assert from 'assert';
 import responseIterator from 'response-iterator';
 import decodeUTF8 from '../lib/decodeUTF8.ts';
