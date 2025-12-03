@@ -1,7 +1,6 @@
-import Pinkie from 'pinkie-promise';
-import '../lib/polyfill.ts';
 import assert from 'assert';
 import get from 'get-remote';
+import Pinkie from 'pinkie-promise';
 
 import responseIterator from 'response-iterator';
 import decodeUTF8 from '../lib/decodeUTF8.ts';
