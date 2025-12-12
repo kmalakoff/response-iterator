@@ -66,21 +66,21 @@
     "version": "tsds version"
   },
   "devDependencies": {
-    "@types/mocha": "*",
-    "@types/node": "*",
-    "@web/dev-server-import-maps": "*",
-    "axios": "*",
-    "cross-fetch": "*",
-    "get-remote": "*",
-    "isomorphic-fetch": "*",
-    "node-fetch": "*",
-    "node-version-use": "*",
-    "pinkie-promise": "*",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.0.1",
+    "@web/dev-server-import-maps": "^0.2.1",
+    "axios": "^1.13.2",
+    "cross-fetch": "^4.1.0",
+    "get-remote": "^2.3.1",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^3.3.2",
+    "node-version-use": "^2.1.5",
+    "pinkie-promise": "^2.0.1",
     "readable-stream": "^2.3.8",
-    "ts-dev-stack": "*",
-    "tsds-config": "*",
-    "tsds-web-test-runner": "*",
-    "undici": "*"
+    "ts-dev-stack": "^1.21.3",
+    "tsds-config": "^0.2.1",
+    "tsds-web-test-runner": "^1.19.4",
+    "undici": "^7.16.0"
   },
   "engines": {
     "node": ">=0.8"
