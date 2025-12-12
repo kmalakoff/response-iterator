@@ -4,7 +4,7 @@
  */
 
 // Feature detection (runs once at module load)
-var hasBufferFrom = typeof Buffer !== 'undefined' && typeof Buffer.from === 'function' && Buffer.from !== Uint8Array.from;
+const hasBufferFrom = typeof Buffer !== 'undefined' && typeof Buffer.from === 'function' && Buffer.from !== Uint8Array.from;
 
 /**
  * Create a buffer from string, array, or existing buffer
@@ -21,8 +21,8 @@ export function bufferFrom(data: string | number[] | Buffer | Uint8Array, encodi
   // Node 0.8 compatibility - deprecated Buffer constructor
   // For Uint8Array, convert to array first (needed for crypto output in Node 0.8)
   if (data instanceof Uint8Array && !(data instanceof Buffer)) {
-    var arr: number[] = [];
-    for (var i = 0; i < data.length; i++) {
+    const arr: number[] = [];
+    for (let i = 0; i < data.length; i++) {
       arr.push(data[i]);
     }
     return new Buffer(arr);
