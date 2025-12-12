@@ -96,7 +96,7 @@ describe('response-iterator node', () => {
   it('get-remote stream', (done) => {
     const _res = get('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').stream((err, res) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       try {
