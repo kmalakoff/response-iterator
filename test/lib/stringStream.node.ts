@@ -1,8 +1,4 @@
-import StreamCompat from 'readable-stream';
-import Stream from 'stream';
-import { bufferFrom } from './compat.ts';
-
-const Readable = Stream.Readable || StreamCompat.Readable;
+import { bufferFrom, Readable } from './compat.ts';
 
 export default function stringStream(string: string, encoding: BufferEncoding): NodeJS.ReadableStream {
   let ended = false;
