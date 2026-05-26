@@ -4,32 +4,33 @@ const hasIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
 /* c8 ignore start */
 export default function nodeStreamIterator<T, TReturn = unknown, TNext = unknown>(stream: NodeReadableStream): AsyncIterableIterator<T, TReturn, TNext> {
-  let cleanup = null;
-  let error = null;
+  type WaitingPair = [(value: IteratorResult<T, TReturn>) => void, (reason?: unknown) => void];
+  let cleanup: (() => void) | null = null;
+  let error: Error | null = null;
   let done = false;
-  const data = [];
-  const waiting = [];
+  const data: T[] = [];
+  const waiting: WaitingPair[] = [];
 
-  function onData(chunk) {
+  function onData(chunk: T): void {
     if (error) return;
-    if (waiting.length) return waiting.shift()[0]({ value: chunk, done: false });
+    if (waiting.length) return (waiting.shift() as WaitingPair)[0]({ value: chunk, done: false });
     data.push(chunk);
   }
-  function onError(err) {
+  function onError(err: Error): void {
     error = err;
     const all = waiting.slice();
     all.forEach((pair) => {
       pair[1](err);
     });
-    !cleanup || cleanup();
+    if (cleanup) cleanup();
   }
-  function onEnd() {
+  function onEnd(): void {
     done = true;
     const all = waiting.slice();
     all.forEach((pair) => {
-      pair[0]({ value: undefined, done: true });
+      pair[0]({ value: undefined as unknown as TReturn, done: true });
     });
-    !cleanup || cleanup();
+    if (cleanup) cleanup();
   }
 
   cleanup = () => {
@@ -49,24 +50,24 @@ export default function nodeStreamIterator<T, TReturn = unknown, TNext = unknown
   function getNext(): Promise<IteratorResult<T, TReturn>> {
     return new Promise((resolve, reject) => {
       if (error) return reject(error);
-      if (data.length) return resolve({ value: data.shift(), done: false });
-      if (done) return resolve({ value: undefined, done: true });
+      if (data.length) return resolve({ value: data.shift() as T, done: false });
+      if (done) return resolve({ value: undefined as unknown as TReturn, done: true });
       waiting.push([resolve, reject]);
     });
   }
 
-  const iterator = {
+  const iterator: { next(): Promise<IteratorResult<T, TReturn>> } = {
     next(): Promise<IteratorResult<T, TReturn>> {
       return getNext();
     },
   };
 
   if (hasIterator) {
-    iterator[Symbol.asyncIterator] = function (): AsyncIterator<T, TReturn> {
-      return this;
+    (iterator as unknown as AsyncIterableIterator<T, TReturn, TNext>)[Symbol.asyncIterator] = function (): AsyncIterableIterator<T, TReturn, TNext> {
+      return this as unknown as AsyncIterableIterator<T, TReturn, TNext>;
     };
   }
 
-  return iterator as AsyncIterableIterator<T, TReturn, TNext>;
+  return iterator as unknown as AsyncIterableIterator<T, TReturn, TNext>;
 }
 /* c8 ignore stop */
