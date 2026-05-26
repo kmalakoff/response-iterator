@@ -44,7 +44,7 @@ describe('response-iterator node', () => {
   it('string stream', (done) => {
     const res = stringStream('{ "name": "response-iterator"}', 'utf8');
     try {
-      toText(responseIterator(res)).then((data: string) => {
+      toText(responseIterator(res)).then((data) => {
         assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
         done();
       });
@@ -60,9 +60,9 @@ describe('response-iterator node', () => {
 
     let data = '';
     for await (const chunk of iter) {
-      data += decodeUTF8(chunk);
+      data += decodeUTF8(chunk as Uint8Array);
     }
-    assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+    assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
   });
 
   !hasConst ||
@@ -81,8 +81,8 @@ describe('response-iterator node', () => {
             })
             .then((res) => {
               try {
-                toText(responseIterator(res)).then((data: string) => {
-                  assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+                toText(responseIterator(res)).then((data) => {
+                  assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                   done();
                 });
               } catch (err) {
@@ -95,13 +95,10 @@ describe('response-iterator node', () => {
 
   it('get-remote stream', (done) => {
     const _res = get('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').stream((err, res) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       try {
-        toText(responseIterator(res)).then((data: string) => {
-          assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+        toText(responseIterator(res)).then((data) => {
+          assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
           done();
         });
       } catch (err) {
@@ -121,8 +118,8 @@ describe('response-iterator node', () => {
         .then((nodeFetch) => {
           nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
             try {
-              toText(responseIterator(res)).then((data: string) => {
-                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+              toText(responseIterator(res)).then((data) => {
+                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                 done();
               });
             } catch (err) {
@@ -138,8 +135,8 @@ describe('response-iterator node', () => {
   //     .then((got) => {
   //       const res = got.stream('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
   //       try {
-  //         toText(responseIterator(res)).then((data: string) => {
-  //           assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+  //         toText(responseIterator(res)).then((data) => {
+  //           assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
   //           done();
   //         });
   //       } catch (err) {
@@ -160,8 +157,8 @@ describe('response-iterator node', () => {
         .then(() => {
           fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
             try {
-              toText(responseIterator(res)).then((data: string) => {
-                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+              toText(responseIterator(res)).then((data) => {
+                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                 done();
               });
             } catch (err) {
@@ -178,9 +175,9 @@ describe('response-iterator node', () => {
 
       let data = '';
       for await (const chunk of responseIterator(res)) {
-        data += decodeUTF8(chunk);
+        data += decodeUTF8(chunk as Uint8Array);
       }
-      assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+      assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
     });
 
   !hasConst ||
@@ -194,8 +191,8 @@ describe('response-iterator node', () => {
         .then((crossFetch) => {
           crossFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
             try {
-              toText(responseIterator(res)).then((data: string) => {
-                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+              toText(responseIterator(res)).then((data) => {
+                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                 done();
               });
             } catch (err) {
@@ -218,8 +215,8 @@ describe('response-iterator node', () => {
           if (!undici.fetch) return skip();
           undici.fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
             try {
-              toText(responseIterator(res)).then((data: string) => {
-                assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+              toText(responseIterator(res)).then((data) => {
+                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                 done();
               });
             } catch (err) {
