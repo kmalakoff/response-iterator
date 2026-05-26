@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "response-iterator", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]
+ignores: ["node-version-use", "ts-dev-stack", "response-iterator", "readable-stream", "tsds-web-test-runner", "cross-fetch", "get-remote", "isomorphic-fetch", "undici"]

@@ -1,6 +1,6 @@
 // https://developer.mozilla.org/en-US/docs/Glossary/Base64#Solution_2_%E2%80%93_JavaScript's_UTF-16_%3E_UTF-8_%3E_base64
 /* c8 ignore start */
-function decodeUTF8Polyfill(uint8Array) {
+function decodeUTF8Polyfill(uint8Array: Uint8Array) {
   let sView = '';
 
   for (let nPart: number, nLen: number = uint8Array.length, nIdx = 0; nIdx < nLen; nIdx++) {
@@ -26,7 +26,7 @@ function decodeUTF8Polyfill(uint8Array) {
 }
 /* c8 ignore stop */
 
-function decodeUTF8(uint8Array) {
+function decodeUTF8(uint8Array: Uint8Array) {
   const decoder = new TextDecoder('utf8');
   return decoder.decode(uint8Array);
 }
