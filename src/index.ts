@@ -29,7 +29,7 @@ export default function responseIterator<T, TReturn = unknown, TNext = unknown>(
   /* c8 ignore stop */
 
   // adapt the body
-  if (hasIterator && body[Symbol.asyncIterator]) return asyncIterator<T, TReturn, TNext>(body as AsyncIterableIterator<T, TReturn, TNext>);
+  if (hasIterator && (body as Record<symbol, unknown>)[Symbol.asyncIterator]) return asyncIterator<T, TReturn, TNext>(body as AsyncIterableIterator<T, TReturn, TNext>);
   /* c8 ignore start */
   if ((body as ReadableStream<T>).getReader) return readerIterator<T, TReturn, TNext>((body as ReadableStream<T>).getReader());
   if ((body as Blob).stream) return readerIterator<T, TReturn, TNext>(((body as Blob).stream() as unknown as ReadableStream<T>).getReader());

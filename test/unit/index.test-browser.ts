@@ -30,8 +30,8 @@ describe('response-iterator', () => {
   it('string stream', (done) => {
     const res = stringStream('{ "name": "response-iterator"}', 'utf8');
     try {
-      toText(responseIterator(res)).then((data: string) => {
-        assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+      toText(responseIterator(res)).then((data) => {
+        assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
         done();
       });
     } catch (err) {
@@ -47,7 +47,7 @@ describe('response-iterator', () => {
 
       let data = '';
       for await (const chunk of iter) {
-        data += decodeUTF8(chunk);
+        data += decodeUTF8(chunk as Uint8Array);
       }
       assert.deepEqual(JSON.parse(data).name, 'response-iterator');
     });
@@ -63,8 +63,8 @@ describe('response-iterator', () => {
             })
             .then((res) => {
               try {
-                toText(responseIterator(res)).then((data: string) => {
-                  assert.deepEqual(JSON.parse(data).name, 'response-iterator');
+                toText(responseIterator(res)).then((data) => {
+                  assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
                   done();
                 });
               } catch (err) {
