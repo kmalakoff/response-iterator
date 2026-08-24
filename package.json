@@ -69,7 +69,7 @@
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/mocha": "*",
     "@types/node": "*",
-    "@web/dev-server-import-maps": "^0.2.1",
+    "@web/dev-server-import-maps": "^0.3.0",
     "axios": "^1.13.2",
     "cross-fetch": "^4.1.0",
     "get-remote": "^2.3.4",
