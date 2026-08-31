@@ -8,6 +8,7 @@ import stringStream from '../lib/stringStream.node.ts';
 import toText from '../lib/toText.ts';
 
 const hasConst = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 0;
+const hasAsyncIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
 describe('response-iterator node', () => {
   (() => {
@@ -53,17 +54,18 @@ describe('response-iterator node', () => {
     }
   });
 
-  it('string stream - async', async () => {
-    const res = stringStream('{ "name": "response-iterator"}', 'utf8');
+  !hasAsyncIterator ||
+    it('string stream - async', async () => {
+      const res = stringStream('{ "name": "response-iterator"}', 'utf8');
 
-    const iter = responseIterator(res);
+      const iter = responseIterator(res);
 
-    let data = '';
-    for await (const chunk of iter) {
-      data += decodeUTF8(chunk as Uint8Array);
-    }
-    assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-  });
+      let data = '';
+      for await (const chunk of iter) {
+        data += decodeUTF8(chunk as Uint8Array);
+      }
+      assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+    });
 
   !hasConst ||
     it('axios stream or blob', (done) => {
