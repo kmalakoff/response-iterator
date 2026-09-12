@@ -1,37 +1,31 @@
-## response-iterator
+# response-iterator
 
-Creates an async iterator for a variety of inputs in the browser and node. Supports fetch, node-fetch, cross-fetch, axios, got, undici.
+Create an async iterator for response bodies from Fetch, node-fetch, cross-fetch, Axios, or Node streams.
 
-### Example 1
+## Install
+
+```sh
+npm install response-iterator
+```
+
+## Use with fetch
 
 ```typescript
-// import "isomorphic-fetch"; // node only
 import responseIterator from 'response-iterator';
 
 const res = await fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
 
+const decoder = new TextDecoder();
 let data = '';
 for await (const chunk of responseIterator(res)) {
-  data += chunk;
+  data += typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true });
 }
+data += decoder.decode();
 console.log(JSON.parse(data).name); // "response-iterator"
 ```
 
-### Example 2
+The example uses the global `fetch` available in modern Node.js and browsers. On older Node.js versions, pass a response from a fetch implementation such as `cross-fetch`. Yielded chunks keep the underlying body type, so decode `Uint8Array` chunks before treating them as text.
 
-```typescript
-import crossFetch from 'cross-fetch';
-import responseIterator from 'response-iterator';
-
-const res = await crossFetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json');
-
-let data = '';
-for await (const chunk of responseIterator(res)) {
-  data += chunk;
-}
-console.log(JSON.parse(data).name); // "response-iterator"
-```
-
-### Documentation
+## Documentation
 
 [API Docs](https://kmalakoff.github.io/response-iterator/)
