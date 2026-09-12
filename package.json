@@ -59,10 +59,8 @@
     "docs": "tsds docs",
     "format": "tsds format",
     "prepublishOnly": "tsds validate",
-    "test": "npm run test:node && npm run test:browser",
-    "test:browser": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\"",
-    "test:engines": "nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\" && npm run test:browser",
-    "test:node": "tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
+    "test": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\" && tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
+    "test:engines": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\" && nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
     "version": "tsds version"
   },
   "devDependencies": {
@@ -77,7 +75,7 @@
     "node-fetch": "^3.3.2",
     "node-version-use": "*",
     "pinkie-promise": "*",
-    "readable-stream": "^2.0.2",
+    "readable-stream": "2.3.8",
     "ts-dev-stack": "*",
     "tsds-config": "*",
     "tsds-web-test-runner": "*",
@@ -85,6 +83,9 @@
   },
   "engines": {
     "node": ">=0.8"
+  },
+  "allowScripts": {
+    "esbuild": true
   },
   "tsds": {
     "targets": [

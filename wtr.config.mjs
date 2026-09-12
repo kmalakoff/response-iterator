@@ -8,6 +8,7 @@ export default createConfig({
       inject: {
         importMap: {
           imports: {
+            axios: '/node_modules/axios/dist/esm/axios.js',
             'pinkie-promise': 'https://esm.sh/pinkie-promise@2.0.1',
           },
         },
