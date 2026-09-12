@@ -7,7 +7,10 @@ import decodeUTF8 from '../lib/decodeUTF8.ts';
 import stringStream from '../lib/stringStream.node.ts';
 import toText from '../lib/toText.ts';
 
-const hasConst = typeof process !== 'undefined' && +process.versions.node.split('.')[0] > 0;
+const hasAsyncIterator = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
+const [nodeMajor, nodeMinor, nodePatch] = process.versions.node.split('.').map(Number);
+const hasNodeFetch = nodeMajor >= 16 || (nodeMajor === 14 && (nodeMinor > 13 || (nodeMinor === 13 && nodePatch >= 1))) || (nodeMajor === 12 && nodeMinor >= 20);
+const hasUndici = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 19);
 
 describe('response-iterator node', () => {
   (() => {
@@ -53,44 +56,45 @@ describe('response-iterator node', () => {
     }
   });
 
-  it('string stream - async', async () => {
-    const res = stringStream('{ "name": "response-iterator"}', 'utf8');
+  !hasAsyncIterator ||
+    it('string stream - async', async () => {
+      const res = stringStream('{ "name": "response-iterator"}', 'utf8');
 
-    const iter = responseIterator(res);
+      const iter = responseIterator(res);
 
-    let data = '';
-    for await (const chunk of iter) {
-      data += decodeUTF8(chunk as Uint8Array);
-    }
-    assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+      let data = '';
+      for await (const chunk of iter) {
+        data += decodeUTF8(chunk as Uint8Array);
+      }
+      assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+    });
+
+  it('axios stream or blob', (done) => {
+    import('axios')
+      .then((axios) =>
+        axios.default({
+          url: 'https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json',
+          responseType: 'stream',
+        })
+      )
+      .then((res) => toText(responseIterator(res)))
+      .then((data) => {
+        assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+        done();
+      })
+      .catch(done);
   });
 
-  !hasConst ||
-    it('axios stream or blob', (done) => {
-      function skip() {
-        console.log('skipping axios');
-        done();
-      }
-
-      import('axios')
-        .then((axios) =>
-          axios
-            .default({
-              url: 'https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json',
-              responseType: typeof window === 'undefined' ? 'stream' : 'blob',
-            })
-            .then((res) => {
-              try {
-                toText(responseIterator(res)).then((data) => {
-                  assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-                  done();
-                });
-              } catch (err) {
-                done(err);
-              }
-            })
-        )
-        .catch(skip);
+  hasNodeFetch &&
+    it('node-fetch', (done) => {
+      import('node-fetch')
+        .then((nodeFetch) => nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json'))
+        .then((res) => toText(responseIterator(res)))
+        .then((data) => {
+          assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+          done();
+        })
+        .catch(done);
     });
 
   it('get-remote stream', (done) => {
@@ -106,29 +110,6 @@ describe('response-iterator node', () => {
       }
     });
   });
-
-  !hasConst ||
-    it('node-fetch', (done) => {
-      function skip() {
-        console.log('skipping node-fetch');
-        done();
-      }
-
-      import('node-fetch')
-        .then((nodeFetch) => {
-          nodeFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
-            try {
-              toText(responseIterator(res)).then((data) => {
-                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-                done();
-              });
-            } catch (err) {
-              done(err);
-            }
-          });
-        })
-        .catch(skip);
-    });
 
   // it('got stream', (done) => {
   //   import('got')
@@ -146,28 +127,16 @@ describe('response-iterator node', () => {
   //     .catch(skip);
   // });
 
-  !hasConst ||
-    it('isomorphic-fetch', (done) => {
-      function skip() {
-        console.log('skipping isomorphic-fetch');
+  it('isomorphic-fetch', (done) => {
+    import('isomorphic-fetch')
+      .then(() => fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json'))
+      .then((res) => toText(responseIterator(res)))
+      .then((data) => {
+        assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
         done();
-      }
-
-      import('isomorphic-fetch')
-        .then(() => {
-          fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
-            try {
-              toText(responseIterator(res)).then((data) => {
-                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-                done();
-              });
-            } catch (err) {
-              done(err);
-            }
-          });
-        })
-        .catch(skip);
-    });
+      })
+      .catch(done);
+  });
 
   typeof fetch === 'undefined' ||
     it('fetch - async', async () => {
@@ -180,50 +149,26 @@ describe('response-iterator node', () => {
       assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
     });
 
-  !hasConst ||
-    it('cross-fetch', (done) => {
-      function skip() {
-        console.log('skipping cross-fetch');
+  it('cross-fetch', (done) => {
+    import('cross-fetch')
+      .then((crossFetch) => crossFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json'))
+      .then((res) => toText(responseIterator(res)))
+      .then((data) => {
+        assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
         done();
-      }
+      })
+      .catch(done);
+  });
 
-      import('cross-fetch')
-        .then((crossFetch) => {
-          crossFetch.default('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
-            try {
-              toText(responseIterator(res)).then((data) => {
-                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-                done();
-              });
-            } catch (err) {
-              done(err);
-            }
-          });
-        })
-        .catch(skip);
-    });
-
-  !hasConst ||
+  hasUndici &&
     it('undici', (done) => {
-      function skip() {
-        console.log('skipping undici');
-        done();
-      }
-
       import('undici')
-        .then((undici) => {
-          if (!undici.fetch) return skip();
-          undici.fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json').then((res) => {
-            try {
-              toText(responseIterator(res)).then((data) => {
-                assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-                done();
-              });
-            } catch (err) {
-              done(err);
-            }
-          });
+        .then((undici) => undici.fetch('https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json'))
+        .then((res) => toText(responseIterator(res)))
+        .then((data) => {
+          assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
+          done();
         })
-        .catch(skip);
+        .catch(done);
     });
 });
