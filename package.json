@@ -60,7 +60,7 @@
     "format": "tsds format",
     "prepublishOnly": "tsds validate",
     "test": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\" && tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
-    "test:engines": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\" && nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" && tsds test:node --no-timeouts \"test/**/*.test-node.*\"",
+    "test:engines": "tsds test:browser --config wtr.config.mjs && tsds test:browser --config wtr.config.mjs \"test/**/*.test-browser.*\" && nvu engines tsds test:node --no-timeouts \"test/**/*.test.*\" \"test/unit/index.test-node.ts\" && tsds test:node --no-timeouts \"test/integration/node-adapters.test-node.ts\"",
     "version": "tsds version"
   },
   "devDependencies": {
