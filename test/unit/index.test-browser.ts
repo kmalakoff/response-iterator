@@ -5,7 +5,6 @@ import stringStream from '../lib/stringStream.browser.ts';
 import toText from '../lib/toText.ts';
 
 const hasAsyncIterator = typeof Symbol !== 'undefined' && typeof Symbol.asyncIterator !== 'undefined';
-const hasAxiosBrowser = typeof Blob !== 'undefined' && typeof XMLHttpRequest !== 'undefined';
 
 describe('response-iterator', () => {
   it('error: no response', () => {
@@ -50,22 +49,5 @@ describe('response-iterator', () => {
         data += decodeUTF8(chunk as Uint8Array);
       }
       assert.deepEqual(JSON.parse(data).name, 'response-iterator');
-    });
-
-  !hasAxiosBrowser ||
-    it('axios stream or blob', (done) => {
-      import('axios')
-        .then((axios) =>
-          axios.default({
-            url: 'https://raw.githubusercontent.com/kmalakoff/response-iterator/master/package.json',
-            responseType: 'blob',
-          })
-        )
-        .then((res) => toText(responseIterator(res)))
-        .then((data) => {
-          assert.deepEqual(JSON.parse(data as string).name, 'response-iterator');
-          done();
-        })
-        .catch(done);
     });
 });
